@@ -5,7 +5,7 @@ import chalk from "chalk";
 import figlet from "figlet";
 import { Command } from "commander";
 import { login,logout,whoami } from "./commands/auth/login.js";
-
+import { wakeUp } from "../cli/commands/ai/wakeUp.js";
 
 const main = async () => {
     console.log(
@@ -21,7 +21,8 @@ const main = async () => {
 
     program.version("0.0.1").description("Flux Cli: Device FLow Auth");
 
-    //program.addCommand(wakeUp);
+  
+    program.addCommand(wakeUp);
     program.addCommand(login);
     program.addCommand(logout);
     program.addCommand(whoami);

@@ -24,8 +24,6 @@ const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CONFIG_DIR = path.join(os.homedir(), ".better-auth");
 const TOKEN_FILE = path.join(CONFIG_DIR, "token.json");
 
-console.log(CLIENT_ID)
-console.log(process.env.GITHUB_CLIENT_ID)
 
 // TOKEN MANAGEMENT (Export these for use in other commands)
 
