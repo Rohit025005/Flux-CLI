@@ -1,4 +1,4 @@
--- CreateTable
+lol-- CreateTable
 CREATE TABLE "Test" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,

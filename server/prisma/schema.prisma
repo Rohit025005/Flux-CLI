@@ -1,4 +1,3 @@
-
 generator client {
   provider     = "prisma-client-js"
   // FIXED: Added -js suffix
@@ -25,9 +24,9 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
-  
+
   conversation Conversation[]
-  
+
   @@map("user")
 }
 
@@ -93,27 +92,26 @@ model DeviceCode {
   @@map("deviceCode")
 }
 
-model Conversation{
-  id String @id @default(cuid())
-  userId String
-  title String?
-  mode String @default("chat")
+model Conversation {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String?
+  mode      String   @default("chat")
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  updatedAt DateTime @updatedAt
 
-  use User @relation(fields:[userId], references:[id], onDelete:Cascade)
-  message Message[]
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
 }
-
 
 model Message {
   id             String   @id @default(cuid())
   conversationId String
-  role           String   // user, assistant, system, tool
-  content        String   // JSON string for complex content
+  role           String
+  content        String
   createdAt      DateTime @default(now())
-  
+
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  
+
   @@index([conversationId])
 }
