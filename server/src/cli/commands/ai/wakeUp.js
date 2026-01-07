@@ -5,7 +5,7 @@ import { getStoredToken } from "../auth/login.js";
 import prisma from "../../../lib/db.js";
 import { select } from "@clack/prompts";
  import { startChat } from "../../chat/chat-ai.js";
-// import { startToolChat } from "../../chat/chat-with-ai-tool.js";
+import { startToolChat } from "../../chat/chat-ai-tools.js";
 // import { startAgentChat } from "../../chat/chat-with-ai-agent.js";
 
 const wakeUpAction = async () => {
@@ -20,7 +20,7 @@ const wakeUpAction = async () => {
   spinner.start();
 
   const user = await prisma.user.findFirst({
-    where: {
+    where: { 
       sessions: {
         some: { token: token.access_token },
       },
