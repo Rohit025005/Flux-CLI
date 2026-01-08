@@ -367,7 +367,7 @@ async function chatLoop(conversation) {
 export async function startToolChat(conversationId = null) {
   try {
     intro(
-      boxen(chalk.bold.cyan("🛠️  flux AI - Tool Calling Mode"), {
+      boxen(chalk.bold.cyan(" flux AI - Tool Calling Mode"), {
         padding: 1,
         borderStyle: "double",
         borderColor: "cyan",
@@ -385,9 +385,9 @@ export async function startToolChat(conversationId = null) {
     // Reset tools on exit
     resetTools();
 
-    outro(chalk.green("✨ Thanks for using tools!"));
+    outro(chalk.green("Thanks for using tools!"));
   } catch (error) {
-    const errorBox = boxen(chalk.red(`❌ Error: ${error.message}`), {
+    const errorBox = boxen(chalk.red(` Error: ${error.message}`), {
       padding: 1,
       margin: 1,
       borderStyle: "round",
