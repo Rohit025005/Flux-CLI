@@ -16,7 +16,7 @@ async function getUserFromToken() {
     const token = await getStoredToken();
 
     if (!token?.access_token) {
-        throw new Error("Not authenticated. Please run 'orbit login' first.");
+        throw new Error("Not authenticated. Please run 'flux login' first.");
     }
 
     const user = await prisma.user.findFirst({
