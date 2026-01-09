@@ -30,6 +30,7 @@ cd Flux-CLI
 ```bash
 cd server
 npm install
+npx prisma generate
 ```
 ```bash
 cd client
