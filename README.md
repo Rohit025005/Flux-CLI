@@ -5,11 +5,11 @@ Flux CLI lets you interact with AI models, execute tools, and manage conversatio
 
 Features
 
- Interactive AI chat in terminal
- Tool calling support (functions invoked by AI)
- Web search & URL context (experimental)
- OAuth-based login (GitHub)
- Conversation history stored in database
+ Interactive AI chat in terminal,
+ Tool calling support (functions invoked by AI),
+ Web search & URL context (experimental),
+ OAuth-based login (GitHub),
+ Conversation history stored in database,
 Modular command system for easy extension
 ## Tech Stack
 
