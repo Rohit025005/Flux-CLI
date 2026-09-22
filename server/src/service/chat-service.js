@@ -9,8 +9,6 @@ export class ChatService{
       @params { string } mode - chat,tool or agent
       @params { string } title - optional conversation title
      */
-    
-    
     async createConversation(userId ,mode ="chat", title = null){
         return await prisma.Conversation.create({
             data:{
@@ -20,6 +18,8 @@ export class ChatService{
             }
         });
     }
+
+    
     /**
      * get old convo if doesnt exist create a new
       @params { string } userId- users id

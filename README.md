@@ -23,7 +23,10 @@ Features
 Install my-project with npm
 
     1. Clone the repo
-git clone https://github.com/Rohit025005/Flux-CLI.git
+    
+    git clone https://github.com/Rohit025005/Flux-CLI.git
+
+
 cd Flux-CLI
 
     2. Install dependencies
@@ -58,22 +61,57 @@ PRISMA_CLIENT_ENGINE_TYPE=binary
 GOOGLE_GENERATIVE_AI_API_KEY=your gemini api key
 
 FLUX_MODEL=gemini-2.5-flash
+
+NVIDIA_API_KEY=your nvidia api key
+
+FLUX_NVIDIA_MODEL=nvidia/llama-3.1-70b-instruct
+
+INCEPTION_API_KEY=your inception api key
+
+FLUX_INCEPTION_MODEL=mercury-2
+
+TAVILY_API_KEY=your tavily api key (for web search)
 ```
 
+## Providers
+
+Flux CLI supports multiple AI providers:
+
+| Provider | Models | Tool Support | Notes |
+|----------|--------|--------------|-------|
+| Google Gemini | gemini-2.5-flash, gemini-2.5-pro | ✅ Full (native + generic) | Native: google_search, code_execution, url_context |
+| NVIDIA NIM | llama-3.1-70b, nemotron-3-ultra, etc. | ✅ Generic (web_search, url_context) | OpenAI-compatible API |
+| Inception AI | mercury-2, mercury-coder-small | ✅ Generic (web_search, url_context) | OpenAI-compatible API, diffusion LLM |
 
 ## Usage/Examples
-
-First login using
+First go in server login through github
 ```
 flux login
 ```
 Authenticates using GitHub OAuth and stores session locally.
 
-Start using the Flux-CLI using:
+Start Flux-CLI using Commands:
 
 ```
 flux arise  OR  flux wakeup
 ```
+
+### Provider Selection
+```
+flux arise                                    # Interactive provider + mode selection
+flux arise --provider google                  # Use Google Gemini
+flux arise --provider nvidia                  # Use NVIDIA NIM
+flux arise --provider inception               # Use Inception AI
+flux arise --provider nvidia --model meta/llama-3.1-70b-instruct  # Custom model
+```
+
+### In-Chat Commands
+```
+/provider    # Switch AI provider mid-session (history preserved)
+/status      # Show current provider and model
+exit         # End conversation
+```
+
 Available Commands
 
 ```

@@ -1,7 +1,8 @@
 import chalk from "chalk";
 import boxen from "boxen";
 import { text, isCancel, cancel, intro, outro, confirm } from "@clack/prompts";
-import { AIService } from "../ai/google-service.js"
+import { AIService } from "../ai/ai-service.js"
+import { selectProvider } from "../ai/provider.js";
 import { ChatService } from "../../service/chat-service.js";
 import { getStoredToken } from "../commands/auth/login.js";
 import prisma from "../../lib/db.js";
@@ -9,7 +10,6 @@ import { generateApplication } from "../../config/agent.config.js";
 import dotenv from"dotenv";
 import yoctoSpinner from "yocto-spinner";
 
-const aiService = new AIService();
 const chatService = new ChatService();
 
 async function getUserFromToken() {
@@ -35,17 +35,18 @@ async function getUserFromToken() {
     return user;
 }
 
-async function initConversation(userId, conversationId = null) {
+async function initConversation(userId, conversationId = null, aiService = null) {
     const conversation = await chatService.getOrCreateConversation(
         userId,
         conversationId,
         "agent"
     );
 
+    const providerLine = aiService ? `\n${chalk.gray("Provider:")} ${aiService.providerId} / ${aiService.modelId}` : "";
     const conversationInfo = boxen(
         `${chalk.bold("Conversation")}: ${conversation.title}\n` +
         `${chalk.gray("ID:")} ${conversation.id}\n` +
-        `${chalk.gray("Mode:")} ${chalk.magenta("Agent (Code Generator)")}\n` +
+        `${chalk.gray("Mode:")} ${chalk.magenta("Agent (Code Generator)")}${providerLine}\n` +
         `${chalk.cyan("Working Directory:")} ${process.cwd()}`,
         {
             padding: 1,
@@ -66,7 +67,7 @@ async function saveMessage(conversationId, role, content) {
     return await chatService.addMessage(conversationId, role, content);
 }
 
-async function agentLoop(conversation) {
+async function agentLoop(conversation, aiService) {
     const helpBox = boxen(
         `${chalk.cyan.bold("What can the agent do?")}\n\n` +
         `${chalk.gray('• Generate complete applications from descriptions')}\n` +
@@ -77,6 +78,7 @@ async function agentLoop(conversation) {
         `${chalk.white('• "Build a todo app with React and Tailwind"')}\n` +
         `${chalk.white('• "Create a REST API with Express and MongoDB"')}\n` +
         `${chalk.white('• "Make a weather app using OpenWeatherMap API"')}\n\n` +
+        `${chalk.gray('Type "/provider" to switch provider, "/status" to show current')}\n` +
         `${chalk.gray('Type "exit" to end the session')}`,
         {
             padding: 1,
@@ -108,8 +110,28 @@ async function agentLoop(conversation) {
             break;
         }
 
+        const trimmed = userInput.trim();
+        if (trimmed === "/provider") {
+            try {
+                const picked = await selectProvider();
+                if (isCancel(picked) || isCancel(picked.id)) {
+                    console.log(chalk.yellow("Provider switch cancelled."));
+                    continue;
+                }
+                await aiService.switchProvider(picked.id, picked.model);
+            } catch (e) {
+                console.log(chalk.red(`Switch failed: ${e.message}`));
+            }
+            continue;
+        }
+        if (trimmed === "/status") {
+            console.log(chalk.cyan(`Provider: ${aiService.providerId} / Model: ${aiService.modelId}`));
+            continue;
+        }
+
         if (userInput.toLowerCase() === 'exit') {
             console.log(chalk.yellow("\n Agent session ended\n"))
+            break;
         }
         const userBox = boxen(chalk.white(userInput), {
             padding: 1,
@@ -167,8 +189,12 @@ async function agentLoop(conversation) {
     }
 }
 
-export async function startAgentChat(conversationId = null) {
+
+
+
+export async function startAgentChat(conversationId = null, { provider = "google", model = null } = {}) {
     try {
+        const aiService = new AIService(provider, model);
         intro(
             boxen(
                 chalk.bold.magenta(" flux AI - Agent Mode\n\n") +
@@ -194,8 +220,8 @@ export async function startAgentChat(conversationId = null) {
             process.exit(0);
         }
 
-        const conversation = await initConversation(user.id,   conversationId);
-        await agentLoop(conversation);
+        const conversation = await initConversation(user.id,   conversationId, aiService);
+        await agentLoop(conversation, aiService);
 
         outro(chalk.green.bold("\n Thanks for using Agent Mode!"));
 
