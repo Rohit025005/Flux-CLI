@@ -192,7 +192,7 @@ export async function generateApplication(description, aiService, cwd = process.
         let application;
         const MAX_RETRIES = 2;
 
-        // ================= AI GENERATION + RETRY =================
+        // ai gen and retry  i.e fallof
         for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             const aiSpinner = yoctoSpinner({
                 text:
@@ -210,7 +210,7 @@ export async function generateApplication(description, aiService, cwd = process.
 
                 application = result.object;
 
-                // -------- JSON RECOVERY FALLBACK --------
+               
                 if (!application && result.text) {
                     try {
                         const start = result.text.indexOf("{");
@@ -239,7 +239,7 @@ export async function generateApplication(description, aiService, cwd = process.
             throw new Error("AI failed to produce valid structured output after retries");
         }
 
-        // ================= VALIDATION =================
+        
         printSystem(chalk.green(`\n📦 Generated: ${application.folderName}\n`));
         printSystem(chalk.gray(`Description: ${application.description}\n`));
 
@@ -250,7 +250,7 @@ export async function generateApplication(description, aiService, cwd = process.
         printSystem(chalk.green(`📄 Files: ${application.files.length}\n`));
         displayFileTree(application.files, application.folderName);
 
-        // ================= FILE CREATION =================
+        
         const fileSpinner = yoctoSpinner("📁 Creating project files...").start();
         let appDir;
 
@@ -272,7 +272,7 @@ export async function generateApplication(description, aiService, cwd = process.
             application.setupCommands.forEach(cmd => printSystem(chalk.white(cmd)));
             printSystem(chalk.white("```\n"));
         } else {
-            printSystem(chalk.yellow("ℹ️  No setup commands provided\n"));
+            printSystem(chalk.yellow("'  No setup commands provided\n"));
         }
 
         return {

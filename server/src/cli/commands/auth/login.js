@@ -25,8 +25,8 @@ const CONFIG_DIR = path.join(os.homedir(), ".better-auth");
 const TOKEN_FILE = path.join(CONFIG_DIR, "token.json");
 
 
-// TOKEN MANAGEMENT (Export these for use in other commands)
-
+// TOKEN MANAGEMENT 
+//===============================================================================
 export async function getStoredToken() {
   try {
     const data = await fs.readFile(TOKEN_FILE, "utf-8");
